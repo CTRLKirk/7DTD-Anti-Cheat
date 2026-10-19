@@ -1,4 +1,4 @@
-namespace AntiCheatExtension.Core
+namespace AntiCheat.Core
 {
     public static class DetectionNames
     {

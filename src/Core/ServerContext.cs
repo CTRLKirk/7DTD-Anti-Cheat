@@ -1,4 +1,4 @@
-namespace AntiCheatExtension.Core
+namespace AntiCheat.Core
 {
     internal static class ServerContext
     {
@@ -26,7 +26,34 @@ namespace AntiCheatExtension.Core
 
         public static bool IsExempt(ClientInfo client)
         {
-            return client == null || PermissionLevel(client) <= Settings.Current.ExemptPermissionLevel;
+            return client == null || PermissionLevel(client) <= Settings.Current.ExemptPermissionLevel || IsListedExempt(client);
+        }
+
+        public static bool HasExemptBuff(EntityAlive entity)
+        {
+            var buffs = Settings.Current.ExemptBuffs;
+            if (buffs.Count == 0 || entity?.Buffs == null)
+            {
+                return false;
+            }
+
+            foreach (var buff in buffs)
+            {
+                if (entity.Buffs.HasBuff(buff))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static bool IsListedExempt(ClientInfo client)
+        {
+            var players = Settings.Current.ExemptPlayers;
+            return players.Count > 0 &&
+                   (players.Contains(client.PlatformId?.CombinedString ?? string.Empty) ||
+                    players.Contains(client.CrossplatformId?.CombinedString ?? string.Empty) ||
+                    players.Contains(client.playerName ?? string.Empty));
         }
 
         public static bool IsExempt(int entityId)

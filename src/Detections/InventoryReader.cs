@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using AntiCheatExtension.Core;
+using AntiCheat.Core;
 
-namespace AntiCheatExtension.Detections
+namespace AntiCheat.Detections
 {
     /// <summary>
     /// Reads item stacks out of the inventory blobs a client sends, without touching the live player.

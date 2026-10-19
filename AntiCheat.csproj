@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <AssemblyName>AntiCheatExtension</AssemblyName>
-    <RootNamespace>AntiCheatExtension</RootNamespace>
+    <AssemblyName>AntiCheat</AssemblyName>
+    <RootNamespace>AntiCheat</RootNamespace>
     <LangVersion>9.0</LangVersion>
     <Version>1.0.0</Version>
     <Authors>CTRLKirk</Authors>
-    <Product>AntiCheat Extension</Product>
+    <Product>AntiCheat</Product>
     <Copyright>Copyright (c) 2026 CTRLKirk</Copyright>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
@@ -22,7 +22,7 @@
     <GamePath Condition="'$(GamePath)' == ''">C:\Program Files (x86)\Steam\steamapps\common\7 Days to Die Dedicated Server</GamePath>
     <ManagedPath Condition="Exists('$(GamePath)\7DaysToDieServer_Data\Managed')">$(GamePath)\7DaysToDieServer_Data\Managed</ManagedPath>
     <ManagedPath Condition="'$(ManagedPath)' == ''">$(GamePath)\7DaysToDie_Data\Managed</ManagedPath>
-    <ModFolderName>AntiCheatExtension</ModFolderName>
+    <ModFolderName>AntiCheat</ModFolderName>
     <DistDir>$(MSBuildThisFileDirectory)dist\$(ModFolderName)</DistDir>
   </PropertyGroup>
 
@@ -47,7 +47,7 @@
     <None Include="Config\**\*" />
   </ItemGroup>
 
-  <!-- Lays out a ready-to-install mod folder in dist\AntiCheatExtension. -->
+  <!-- Lays out a ready-to-install mod folder in dist\AntiCheat. -->
   <Target Name="PackageMod" AfterTargets="Build">
     <ItemGroup>
       <ModConfigFiles Include="Config\**\*" />

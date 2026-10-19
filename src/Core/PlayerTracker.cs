@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AntiCheatExtension.Core
+namespace AntiCheat.Core
 {
     public sealed class PlayerTracker
     {

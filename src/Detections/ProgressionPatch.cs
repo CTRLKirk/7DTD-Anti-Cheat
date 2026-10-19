@@ -1,7 +1,7 @@
-using AntiCheatExtension.Core;
+using AntiCheat.Core;
 using HarmonyLib;
 
-namespace AntiCheatExtension.Detections
+namespace AntiCheat.Detections
 {
     [HarmonyPatch(typeof(NetPackagePlayerStats), nameof(NetPackagePlayerStats.ProcessPackage))]
     internal static class ProgressionPatch

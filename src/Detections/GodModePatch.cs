@@ -1,7 +1,7 @@
-using AntiCheatExtension.Core;
+using AntiCheat.Core;
 using HarmonyLib;
 
-namespace AntiCheatExtension.Detections
+namespace AntiCheat.Detections
 {
     [HarmonyPatch(typeof(NetPackageEntityAliveFlags), nameof(NetPackageEntityAliveFlags.ProcessPackage))]
     internal static class GodModePatch

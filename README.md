@@ -1,4 +1,4 @@
-# AntiCheat Extension for 7 Days to Die
+# AntiCheat for 7 Days to Die
 
 A server-side anti-cheat mod for 7 Days to Die dedicated servers. It watches what players send to the server and flags things that should not be possible: god mode, teleporting, speed and fly hacks, noclip, spawned admin items, oversized stacks, impossible damage and reach, and level jumps.
 
@@ -9,8 +9,8 @@ Everything runs on the server. Players do not need to install anything, and a ch
 
 ## Installation
 
-1. Download `AntiCheatExtension-<version>.zip` from the [Releases](https://github.com/CTRLKirk/7DTD-Anti-Cheat/releases) page.
-2. Extract it into the server's `Mods` folder so that you end up with `Mods/AntiCheatExtension/ModInfo.xml`.
+1. Download `AntiCheat-<version>.zip` from the [Releases](https://github.com/CTRLKirk/7DTD-Anti-Cheat/releases) page.
+2. Extract it into the server's `Mods` folder so that you end up with `Mods/AntiCheat/ModInfo.xml`.
 3. Restart the server. The console log should show:
 
    ```
@@ -40,7 +40,7 @@ Admins are skipped. Anyone with a permission level at or below `ExemptPermission
 
 ## What happens on a detection
 
-1. A line is written to the server console and to `Mods/AntiCheatExtension/Logs/detections-<date>.log`.
+1. A line is written to the server console and to `Mods/AntiCheat/Logs/detections-<date>.log`.
 2. Online admins (permission level at or below `NotifyPermissionLevel`) get a private chat message.
 3. If `DiscordWebhookUrl` is set, the detection is posted to that Discord channel.
 4. The configured action runs: `Log` stops here, `Kick` kicks the player, `Ban` bans them.
@@ -49,7 +49,7 @@ The same detection for the same player is only reported once per `AlertCooldownS
 
 ## Configuration
 
-Settings live in `Mods/AntiCheatExtension/Config/settings.xml`. Each check has an `action` (`Off`, `Log`, `Kick` or `Ban`) and its own thresholds:
+Settings live in `Mods/AntiCheat/Config/settings.xml`. Each check has an `action` (`Off`, `Log`, `Kick` or `Ban`) and its own thresholds:
 
 ```xml
 <Detection name="Speed" action="Log" maxSpeed="20" windowSeconds="3" />
@@ -66,6 +66,27 @@ General settings:
 | `DiscordWebhookUrl`     | empty   | Discord webhook for alerts. Leave empty to turn off         |
 
 After editing the file, run `ac reload` in the server console. No restart needed.
+
+## Modded servers
+
+The default limits are set for vanilla. Overhaul mods that make players faster, jump higher, reach further or hit harder will set off the movement, reach and damage checks during normal play. These settings in the same file adjust for that:
+
+| Setting            | Default | Meaning                                                                                              |
+|--------------------|---------|------------------------------------------------------------------------------------------------------|
+| `SpeedMultiplier`  | 1.0     | Multiplies the Speed and Teleport limits. 2.0 allows twice the vanilla limit                          |
+| `ReachMultiplier`  | 1.0     | Multiplies the Reach limit                                                                           |
+| `DamageMultiplier` | 1.0     | Multiplies the Damage limit                                                                          |
+| `ExemptBuffs`      | empty   | Buff names from `buffs.xml`. Players with any of them skip the speed, teleport, fly and noclip checks |
+| `ExemptPlayers`    | empty   | Platform IDs (`Steam_...`, `EOS_...`) or player names that are never checked                         |
+
+Other things that help on a modded server:
+
+- Turn any check off with `action="Off"`, or keep it on `Log` while you work out the right limit.
+- If a mod gives regular players items that are tagged as dev or test items, list them in `allowItems` on the `IllegalItem` check.
+- `StackSize` reads each item's maximum stack size from the loaded item config, so mods that raise stack sizes work without changes.
+- Vehicles and anything else a player is riding are already skipped by the movement checks.
+
+A good way to start: leave Speed, Fly, NoClip and Reach on `Log`, let people play for a few days, then look at `ac recent` and the log files to see what normal looks like on your server before tightening anything.
 
 ## Console commands
 
@@ -87,7 +108,7 @@ You need the .NET SDK (6 or newer) and a copy of the game or the dedicated serve
 dotnet build -c Release -p:GamePath="C:\Program Files (x86)\Steam\steamapps\common\7 Days to Die Dedicated Server"
 ```
 
-The ready-to-install mod folder is written to `dist/AntiCheatExtension`. Add `-p:DeployToGame=true` to copy it straight into `GamePath/Mods` as well. An existing `settings.xml` there is left alone.
+The ready-to-install mod folder is written to `dist/AntiCheat`. Add `-p:DeployToGame=true` to copy it straight into `GamePath/Mods` as well. An existing `settings.xml` there is left alone.
 
 ## License
 

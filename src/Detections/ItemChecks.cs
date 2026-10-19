@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using AntiCheatExtension.Core;
+using AntiCheat.Core;
 
-namespace AntiCheatExtension.Detections
+namespace AntiCheat.Detections
 {
     internal static class ItemChecks
     {
@@ -53,6 +53,11 @@ namespace AntiCheatExtension.Detections
 
         private static bool IsIllegal(DetectionSettings settings, ItemClass itemClass, string name)
         {
+            if (settings.GetList("allowItems").Contains(name))
+            {
+                return false;
+            }
+
             if (settings.GetList("extraItems").Contains(name))
             {
                 return true;

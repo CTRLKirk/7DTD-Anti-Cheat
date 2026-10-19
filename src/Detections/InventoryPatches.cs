@@ -1,7 +1,7 @@
-using AntiCheatExtension.Core;
+using AntiCheat.Core;
 using HarmonyLib;
 
-namespace AntiCheatExtension.Detections
+namespace AntiCheat.Detections
 {
     [HarmonyPatch(typeof(NetPackagePlayerInventory), nameof(NetPackagePlayerInventory.ProcessPackage))]
     internal static class InventoryPatch

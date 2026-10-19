@@ -1,15 +1,15 @@
 using System;
 using System.IO;
 using System.Reflection;
-using AntiCheatExtension.Core;
-using AntiCheatExtension.Detections;
+using AntiCheat.Core;
+using AntiCheat.Detections;
 using HarmonyLib;
 
-namespace AntiCheatExtension
+namespace AntiCheat
 {
     public class ModEntry : IModApi
     {
-        private const string HarmonyId = "com.ctrlkirk.anticheatextension";
+        private const string HarmonyId = "com.ctrlkirk.anticheat";
 
         public static string ModPath { get; private set; }
         public static string SettingsPath => Path.Combine(ModPath, "Config", "settings.xml");

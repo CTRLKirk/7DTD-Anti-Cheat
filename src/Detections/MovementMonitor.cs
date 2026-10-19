@@ -1,7 +1,7 @@
-using AntiCheatExtension.Core;
+using AntiCheat.Core;
 using UnityEngine;
 
-namespace AntiCheatExtension.Detections
+namespace AntiCheat.Detections
 {
     /// <summary>
     /// Samples remote player positions on the server and checks teleport, speed, fly and noclip.
@@ -43,7 +43,7 @@ namespace AntiCheatExtension.Detections
             var tracker = PlayerTracker.Get(player.entityId);
 
             if (!player.Spawned || player.IsDead() || player.AttachedToEntity != null || tracker.InGrace ||
-                ServerContext.IsExempt(player.entityId))
+                ServerContext.IsExempt(player.entityId) || ServerContext.HasExemptBuff(player))
             {
                 tracker.ResetMovement();
                 return;
@@ -61,7 +61,7 @@ namespace AntiCheatExtension.Detections
             var distance = delta.magnitude;
 
             var teleport = settings.Get(DetectionNames.Teleport);
-            if (teleport.Enabled && distance > teleport.GetFloat("maxDistance", 150f))
+            if (teleport.Enabled && distance > teleport.GetFloat("maxDistance", 150f) * settings.SpeedMultiplier)
             {
                 DetectionService.Report(player.entityId, DetectionNames.Teleport,
                     $"moved {distance:F0}m in {now - tracker.LastSampleTime:F1}s from {Format(tracker.LastPosition)} to {Format(position)}");
@@ -94,7 +94,7 @@ namespace AntiCheatExtension.Detections
             }
 
             var average = total / covered;
-            var limit = speed.GetFloat("maxSpeed", 20f);
+            var limit = speed.GetFloat("maxSpeed", 20f) * settings.SpeedMultiplier;
             if (average > limit)
             {
                 DetectionService.Report(player.entityId, DetectionNames.Speed,

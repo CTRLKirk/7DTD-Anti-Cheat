@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Xml.Linq;
 
-namespace AntiCheatExtension.Core
+namespace AntiCheat.Core
 {
     public sealed class Settings
     {
@@ -33,6 +33,11 @@ namespace AntiCheatExtension.Core
         public int BanDurationHours { get; private set; }
         public float AlertCooldownSeconds { get; private set; } = 15f;
         public string DiscordWebhookUrl { get; private set; } = string.Empty;
+        public float SpeedMultiplier { get; private set; } = 1f;
+        public float ReachMultiplier { get; private set; } = 1f;
+        public float DamageMultiplier { get; private set; } = 1f;
+        public HashSet<string> ExemptBuffs { get; private set; } = NewSet();
+        public HashSet<string> ExemptPlayers { get; private set; } = NewSet();
 
         public IEnumerable<DetectionSettings> Detections => detections.Values;
 
@@ -140,10 +145,52 @@ namespace AntiCheatExtension.Core
                 case "DiscordWebhookUrl":
                     DiscordWebhookUrl = value.Trim();
                     break;
+                case "SpeedMultiplier":
+                    SpeedMultiplier = ParseMultiplier(name, value, SpeedMultiplier);
+                    break;
+                case "ReachMultiplier":
+                    ReachMultiplier = ParseMultiplier(name, value, ReachMultiplier);
+                    break;
+                case "DamageMultiplier":
+                    DamageMultiplier = ParseMultiplier(name, value, DamageMultiplier);
+                    break;
+                case "ExemptBuffs":
+                    ExemptBuffs = ParseSet(value);
+                    break;
+                case "ExemptPlayers":
+                    ExemptPlayers = ParseSet(value);
+                    break;
                 default:
                     ModLog.Warning($"Unknown setting '{name}' ignored.");
                     break;
             }
+        }
+
+        private static float ParseMultiplier(string name, string value, float fallback)
+        {
+            if (float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed) && parsed > 0f)
+            {
+                return parsed;
+            }
+
+            ModLog.Warning($"{name} must be a number above 0, keeping {fallback}.");
+            return fallback;
+        }
+
+        private static HashSet<string> NewSet() => new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        private static HashSet<string> ParseSet(string value)
+        {
+            var set = NewSet();
+            foreach (var part in value.Split(new[] { (char)44, (char)59 }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                var trimmed = part.Trim();
+                if (trimmed.Length > 0)
+                {
+                    set.Add(trimmed);
+                }
+            }
+            return set;
         }
 
         private static int ParseInt(string value, int fallback)

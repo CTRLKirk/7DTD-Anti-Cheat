@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace AntiCheatExtension.Core
+namespace AntiCheat.Core
 {
     public enum DetectionAction
     {

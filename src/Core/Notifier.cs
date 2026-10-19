@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntiCheatExtension.Core
+namespace AntiCheat.Core
 {
     internal static class Notifier
     {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Globalization;
-using AntiCheatExtension.Core;
+using AntiCheat.Core;
 
-namespace AntiCheatExtension.Commands
+namespace AntiCheat.Commands
 {
     public class ConsoleCmdAntiCheat : ConsoleCmdAbstract
     {
@@ -10,7 +10,7 @@ namespace AntiCheatExtension.Commands
 
         public override string[] getCommands() => new[] { "anticheat", "ac" };
 
-        public override string getDescription() => "AntiCheat Extension: status, recent detections, reload settings.";
+        public override string getDescription() => "AntiCheat: status, recent detections, reload settings.";
 
         public override string getHelp()
         {
@@ -51,9 +51,11 @@ namespace AntiCheatExtension.Commands
         private static void PrintStatus()
         {
             var settings = Settings.Current;
-            Output($"AntiCheat Extension - {DetectionService.TotalDetections} detection(s) since start");
+            Output($"AntiCheat - {DetectionService.TotalDetections} detection(s) since start");
             Output($"  Exempt permission level: <= {settings.ExemptPermissionLevel}, alerts to: <= {settings.NotifyPermissionLevel}");
             Output($"  Discord webhook: {(string.IsNullOrEmpty(settings.DiscordWebhookUrl) ? "off" : "on")}");
+            Output($"  Modded: speed x{settings.SpeedMultiplier:0.##}, reach x{settings.ReachMultiplier:0.##}, damage x{settings.DamageMultiplier:0.##}, " +
+                   $"exempt buffs: {settings.ExemptBuffs.Count}, exempt players: {settings.ExemptPlayers.Count}");
             foreach (var detection in settings.Detections)
             {
                 Output($"  {detection.Name,-12} {detection.Action}");

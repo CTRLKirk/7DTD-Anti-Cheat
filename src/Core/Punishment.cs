@@ -1,6 +1,6 @@
 using System;
 
-namespace AntiCheatExtension.Core
+namespace AntiCheat.Core
 {
     internal static class Punishment
     {

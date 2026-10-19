@@ -1,8 +1,8 @@
-using AntiCheatExtension.Core;
+using AntiCheat.Core;
 using HarmonyLib;
 using UnityEngine;
 
-namespace AntiCheatExtension.Detections
+namespace AntiCheat.Detections
 {
     [HarmonyPatch(typeof(NetPackageDamageEntity), nameof(NetPackageDamageEntity.ProcessPackage))]
     internal static class DamagePatch
@@ -20,11 +20,11 @@ namespace AntiCheatExtension.Detections
             var damage = settings.Get(DetectionNames.Damage);
             if (damage.Enabled)
             {
-                var limit = damage.GetInt("maxDamage", 10000);
+                var limit = damage.GetFloat("maxDamage", 10000f) * settings.DamageMultiplier;
                 if (__instance.strength > limit)
                 {
                     DetectionService.Report(sender.entityId, DetectionNames.Damage,
-                        $"hit for {__instance.strength} damage (limit {limit}) with {ItemName(__instance.attackingItem)}");
+                        $"hit for {__instance.strength} damage (limit {limit:F0}) with {ItemName(__instance.attackingItem)}");
                     return false;
                 }
             }
@@ -37,7 +37,7 @@ namespace AntiCheatExtension.Detections
                 if (attacker != null && target != null)
                 {
                     var distance = Vector3.Distance(attacker.position, target.position);
-                    var limit = reach.GetFloat("maxDistance", 8f);
+                    var limit = reach.GetFloat("maxDistance", 8f) * settings.ReachMultiplier;
                     if (distance > limit)
                     {
                         DetectionService.Report(sender.entityId, DetectionNames.Reach,

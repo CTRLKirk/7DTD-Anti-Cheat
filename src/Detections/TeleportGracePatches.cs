@@ -1,8 +1,8 @@
-using AntiCheatExtension.Core;
+using AntiCheat.Core;
 using HarmonyLib;
 using UnityEngine;
 
-namespace AntiCheatExtension.Detections
+namespace AntiCheat.Detections
 {
     /// <summary>
     /// Server-initiated teleports (admin commands, trader eviction, game events) start a grace period
