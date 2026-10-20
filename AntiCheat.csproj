@@ -1,0 +1,69 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>AntiCheat</AssemblyName>
+    <RootNamespace>AntiCheat</RootNamespace>
+    <LangVersion>9.0</LangVersion>
+    <Version>1.0.0</Version>
+    <Authors>CTRLKirk</Authors>
+    <Product>AntiCheat</Product>
+    <Copyright>Copyright (c) 2026 CTRLKirk</Copyright>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <!--
+    GamePath must point at a 7 Days to Die (dedicated server or client) install.
+    Override on the command line: dotnet build -c Release -p:GamePath="D:\Games\7 Days To Die"
+  -->
+  <PropertyGroup>
+    <GamePath Condition="'$(GamePath)' == ''">C:\Program Files (x86)\Steam\steamapps\common\7 Days to Die Dedicated Server</GamePath>
+    <ManagedPath Condition="Exists('$(GamePath)\7DaysToDieServer_Data\Managed')">$(GamePath)\7DaysToDieServer_Data\Managed</ManagedPath>
+    <ManagedPath Condition="'$(ManagedPath)' == ''">$(GamePath)\7DaysToDie_Data\Managed</ManagedPath>
+    <ModFolderName>AntiCheat</ModFolderName>
+    <DistDir>$(MSBuildThisFileDirectory)dist\$(ModFolderName)</DistDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp" HintPath="$(ManagedPath)\Assembly-CSharp.dll" Private="false" />
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(ManagedPath)\Assembly-CSharp-firstpass.dll" Private="false" />
+    <Reference Include="LogLibrary" HintPath="$(ManagedPath)\LogLibrary.dll" Private="false" />
+    <Reference Include="UnityEngine" HintPath="$(ManagedPath)\UnityEngine.dll" Private="false" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(ManagedPath)\UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="0Harmony" HintPath="$(GamePath)\Mods\0_TFP_Harmony\0Harmony.dll" Private="false" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="ModInfo.xml" />
+    <None Include="Config\**\*" />
+  </ItemGroup>
+
+  <!-- Lays out a ready-to-install mod folder in dist\AntiCheat. -->
+  <Target Name="PackageMod" AfterTargets="Build">
+    <ItemGroup>
+      <ModConfigFiles Include="Config\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DistDir)" />
+    <Copy SourceFiles="ModInfo.xml" DestinationFolder="$(DistDir)" />
+    <Copy SourceFiles="@(ModConfigFiles)" DestinationFolder="$(DistDir)\Config\%(RecursiveDir)" />
+  </Target>
+
+  <!-- Optional: dotnet build -c Release -p:DeployToGame=true copies the mod into GamePath\Mods. -->
+  <Target Name="DeployMod" AfterTargets="PackageMod" Condition="'$(DeployToGame)' == 'true'">
+    <ItemGroup>
+      <DistFiles Include="$(DistDir)\**\*" Exclude="$(DistDir)\Config\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(DistFiles)" DestinationFolder="$(GamePath)\Mods\$(ModFolderName)\%(RecursiveDir)" />
+    <Copy SourceFiles="@(ModConfigFiles)" DestinationFolder="$(GamePath)\Mods\$(ModFolderName)\Config\%(RecursiveDir)" Condition="!Exists('$(GamePath)\Mods\$(ModFolderName)\Config\settings.xml')" />
+  </Target>
+
+</Project>

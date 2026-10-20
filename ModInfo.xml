@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xml>
+	<Name value="AntiCheat" />
+	<DisplayName value="AntiCheat" />
+	<Description value="Server-side cheat detection: god mode, teleport, speed, fly, noclip, admin items, damage and more." />
+	<Author value="CTRLKirk" />
+	<Version value="1.0.0" />
+	<Website value="https://github.com/CTRLKirk/7DTD-Anti-Cheat" />
+</xml>

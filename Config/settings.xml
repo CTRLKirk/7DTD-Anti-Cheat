@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AntiCheat settings.
+
+  Action values for each detection:
+    Off  - detection disabled
+    Log  - write to the detection log and server console, notify online admins (and Discord if configured)
+    Kick - same as Log, then kick the player
+    Ban  - same as Log, then ban the player for BanDurationHours
+
+  Run "ac reload" in the server console after editing this file.
+-->
+<AntiCheat>
+  <!-- Players at or below this permission level are never checked. 0 = owner. -->
+  <Setting name="ExemptPermissionLevel" value="1" />
+
+  <!-- Online players at or below this permission level receive in-game alerts. -->
+  <Setting name="NotifyPermissionLevel" value="1" />
+
+  <!-- Ban length used by the Ban action. 0 = permanent. -->
+  <Setting name="BanDurationHours" value="0" />
+
+  <!-- Seconds before the same detection can fire again for the same player. -->
+  <Setting name="AlertCooldownSeconds" value="15" />
+
+  <!-- Optional Discord webhook URL for alerts. Leave empty to disable. -->
+  <Setting name="DiscordWebhookUrl" value="" />
+
+  <!--
+    Modded servers. Overhaul mods often let players run faster, hit harder or reach
+    further than vanilla allows. Raise these instead of editing every check below.
+    1.0 means vanilla. Any check can also be turned off completely with action="Off".
+  -->
+
+  <!-- Scales the Speed maxSpeed and Teleport maxDistance limits. -->
+  <Setting name="SpeedMultiplier" value="1.0" />
+
+  <!-- Scales the Reach maxDistance limit. -->
+  <Setting name="ReachMultiplier" value="1.0" />
+
+  <!-- Scales the Damage maxDamage limit. -->
+  <Setting name="DamageMultiplier" value="1.0" />
+
+  <!-- Players with any of these buffs skip the speed, teleport, fly and noclip checks.
+       Comma separated buff names from buffs.xml, for example a mod's sprint or jetpack buff. -->
+  <Setting name="ExemptBuffs" value="" />
+
+  <!-- Players who are never checked, comma separated. Platform ID (Steam_7656..., EOS_...) or player name. -->
+  <Setting name="ExemptPlayers" value="" />
+
+  <!-- Client reports god mode while not exempt. -->
+  <Detection name="GodMode" action="Kick" />
+
+  <!-- Player moved further than maxDistance meters in one check without a server teleport, respawn or vehicle. -->
+  <Detection name="Teleport" action="Kick" maxDistance="150" />
+
+  <!-- Sustained horizontal speed on foot above maxSpeed m/s, averaged over windowSeconds. -->
+  <Detection name="Speed" action="Log" maxSpeed="20" windowSeconds="3" />
+
+  <!-- Airborne with nothing nearby for longer than maxAirSeconds without losing height. -->
+  <Detection name="Fly" action="Log" maxAirSeconds="6" />
+
+  <!-- Feet and head inside solid blocks for minChecks checks in a row (one check every 0.5s). -->
+  <Detection name="NoClip" action="Log" minChecks="4" />
+
+  <!-- Admin/developer items (CreativeMode Dev or Test in items.xml) or any item listed in extraItems (comma separated).
+       Items listed in allowItems are never flagged, for mods that hand out dev-tagged items to normal players. -->
+  <Detection name="IllegalItem" action="Kick" creativeModes="Dev,Test" extraItems="" allowItems="" />
+
+  <!-- Item stack larger than the item's max stack size. -->
+  <Detection name="StackSize" action="Log" />
+
+  <!-- Single hit above maxDamage. The hit is also dropped. -->
+  <Detection name="Damage" action="Kick" maxDamage="10000" />
+
+  <!-- Melee hit from further than maxDistance meters. -->
+  <Detection name="Reach" action="Log" maxDistance="8" />
+
+  <!-- Player level jumped by more than maxLevelGain in a single update. -->
+  <Detection name="Progression" action="Log" maxLevelGain="3" />
+</AntiCheat>
